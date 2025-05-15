@@ -37,6 +37,48 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+// Endpoint para gerar o relatório
+app.get('/api/report', (req, res) => {
+    // Para simplificar, vamos buscar todos os dados e fazer os cálculos aqui.
+    // Em um cenário real, você pode querer filtrar por data ou outros critérios.
+
+    const sql = `
+        SELECT
+            (SELECT meta_pecas FROM meta_dia ORDER BY data_registro DESC LIMIT 1) AS meta,
+            SUM(pecas_produzidas) AS total_pecas_produzidas,
+            SUM(pecas_aprovadas) AS total_pecas_aprovadas,
+            SUM(pecas_reprovadas) AS total_pecas_reprovadas
+        FROM dados_hora_a_hora;
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar dados para o relatório:', err);
+            return res.status(500).json({ error: 'Erro ao buscar dados para o relatório' });
+        }
+
+        const data = results[0];
+
+        const meta = data.meta || 0;
+        const pecasProduzidas = data.total_pecas_produzidas || 0;
+        const totalAprovados = data.total_pecas_aprovadas || 0;
+        const totalReprovados = data.total_pecas_reprovadas || 0;
+
+        // Calculate percentages
+        const percentAprovados = pecasProduzidas > 0 ? (totalAprovados / pecasProduzidas) * 100 : 0;
+        const percentReprovados = pecasProduzidas > 0 ? (totalReprovados / pecasProduzidas) * 100 : 0;
+
+        res.json({
+            meta,
+            pecasProduzidas,
+            totalAprovados,
+            percentAprovados,
+            totalReprovados,
+            percentReprovados
+        });
+    });
+});
+
 // Endpoint: Indicadores
 app.get('/api/indicadores', (req, res) => {
   const today = new Date().toISOString().split('T')[0];
