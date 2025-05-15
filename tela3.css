@@ -1,0 +1,95 @@
+/* tela3.css */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Garante que o body ocupe a altura total da viewport */
+  width: 100vw; /* Garante que o body ocupe a largura total da viewport */
+}
+
+.form-container {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 90%; /* Ajuste a largura para ser mais responsiva, por exemplo, 90% */
+  max-width: 600px; /* Aumente o max-width para melhor aproveitamento em telas maiores */
+  box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #007bff;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+input, select { /* Adicionado 'select' para estilizar ambos os elementos de formulário */
+  padding: 12px; /* Aumentado o padding para melhor toque/clique */
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 100%; /* Garante que input e select ocupem a largura total disponível */
+  box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+}
+
+button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#statusMsg {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: 600;
+  color: #28a745; /* Cor para mensagem de sucesso */
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .form-container {
+    padding: 25px; /* Reduz o padding em telas menores */
+    width: 95%; /* Ocupa mais largura em telas muito pequenas */
+  }
+
+  h1 {
+    font-size: 24px; /* Ajusta o tamanho do título */
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  input, select, button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

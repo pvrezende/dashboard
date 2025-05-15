@@ -1,0 +1,678 @@
+/* styles.css - Versão Atualizada para Telas Múltiplas e Fullscreen */
+
+:root {
+    --main-bg-color: #eaeaea;
+    --card-bg-color: #ffffff;
+    --card-item-bg-color: #ffffff;
+    --text-color: #333333;
+    --text-muted-color: #888888;
+    --primary-color: #66b2ff;
+    --primary-hover-color: #3386cc;
+    --divider-color: #ddd;
+    --icon-estimated-color: #ffb84d;
+    --icon-produced-color: #4dabf7;
+    --icon-approved-color: #66bb6a;
+    --icon-rejected-color: #f77c7c;
+    --oee-produtividade-color: #ba68c8;
+    --oee-qualidade-color: #4db6ac;
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%; /* Garante que HTML e Body ocupem 100% da altura da viewport */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--main-bg-color);
+    color: var(--text-color);
+    overflow: hidden; /* Evita rolagem no nível do body/html */
+    display: flex; /* Adicionado para que o body possa organizar o screen-selector e as telas */
+    flex-direction: column;
+}
+
+/* Navegação entre telas */
+.screen-selector {
+    display: flex;
+    justify-content: center;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    gap: 10px;
+    /* Adicione um height fixo ou min-height se necessário para calcular a altura das telas */
+    min-height: 54px; /* Exemplo: ajuste este valor se o padding ou line-height mudar */
+    flex-wrap: wrap; /* Para que os botões quebrem a linha em telas menores */
+}
+.screen-selector button {
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.screen-selector button.active {
+    background-color: var(--primary-hover-color); /* Tom mais escuro para o botão ativo */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra interna para profundidade */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Borda sutil */
+}
+.screen-selector button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+
+/* Controle de telas - AGORA FULLSCREEN RELATIVO AO CONTEÚDO */
+.tela {
+    display: none;
+    width: 100vw; /* Garante 100% da largura da viewport */
+    /* Calcula a altura restante da viewport após o screen-selector */
+    height: calc(100vh - var(--screen-selector-height, 54px)); /* Usando CSS variable para altura dinâmica */
+    overflow: auto; /* Adiciona scroll se o conteúdo for maior que a tela */
+    flex-grow: 1; /* Permite que a tela ocupe o espaço restante */
+}
+
+/* Fallback/Default para --screen-selector-height antes de ser atualizado via JS (ou defina diretamente aqui) */
+body {
+  --screen-selector-height: 54px; /* Valor padrão, será atualizado pelo JS */
+}
+
+/* Ajuste para telas menores se o screen-selector quebrar a linha */
+@media (max-width: 768px) {
+    .screen-selector {
+        min-height: auto; /* Deixa a altura se ajustar automaticamente */
+    }
+    .tela {
+        /* Se o screen-selector quebrar, sua altura aumenta. Você precisará ajustar isso.
+           Uma solução robusta seria usar JS para obter a altura real do screen-selector.
+           Por enquanto, um valor estimado maior se espera que ele quebre em 2 linhas. */
+        height: calc(100vh - var(--screen-selector-height-mobile, 100px)); /* Exemplo de altura para mobile */
+    }
+    body {
+        --screen-selector-height-mobile: 100px; /* Valor padrão para mobile, ajuste conforme necessário */
+    }
+}
+
+
+.tela.active {
+    display: block;
+}
+
+/* Dashboard */
+.dashboard {
+    flex: 1;
+    max-width: 100%;
+    background-color: var(--main-bg-color); /* Usando a cor de fundo principal para evitar bordas */
+    padding: 25px;
+    overflow-y: auto; /* A rolagem principal do conteúdo da tela */
+    height: 100%; /* Ocupa 100% da altura da .tela */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--divider-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Estilo padrão para os títulos das telas (cor primária) */
+.tela .header h1,
+.tela .form-container h1 { /* Inclui h1 dentro de .form-container (Tela 3) */
+    color: var(--primary-color); /* Cor primária para títulos de telas inativas */
+    transition: color 0.3s ease; /* Transição suave para a mudança de cor */
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    flex: 1 1 100%;
+}
+
+/* Nova classe para o título da tela ativa (mais escuro) */
+.active-title {
+    color: #333333 !important; /* Um tom mais escuro. Use !important para garantir a precedência. */
+}
+
+
+.current-date-time {
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 8px 0;
+    flex: 1 1 100%;
+}
+
+.action-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.action-buttons-container button,
+.action-buttons-container .report-trigger button {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons-container button:hover,
+.action-buttons-container .report-trigger button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.date-filter label {
+    color: var(--text-muted-color);
+    font-size: 14px;
+}
+
+.date-filter input[type="date"] {
+    padding: 8px;
+    border: 1px solid var(--divider-color);
+    border-radius: 4px;
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.date-filter button {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.date-filter button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: stretch;
+}
+
+.indicator-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-item-bg-color);
+    border-radius: 6px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    min-height: 180px;
+    min-width: 200px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.indicator-card:hover {
+    transform: translateY(-3px);
+}
+
+.indicator-card:nth-child(1) { border-left: 4px solid var(--icon-estimated-color); }
+.indicator-card:nth-child(2) { border-left: 4px solid var(--icon-produced-color); }
+.indicator-card:nth-child(3),
+.indicator-card:nth-child(4) { border-left: 4px solid var(--icon-approved-color); }
+.indicator-card:nth-child(5),
+.indicator-card:nth-child(6) { border-left: 4px solid var(--icon-rejected-color); }
+
+.indicator-icon { font-size: 28px; margin-bottom: 10px; transition: transform 0.3s ease; }
+.indicator-card:hover .indicator-icon i { transform: scale(1.1); }
+
+.indicator-card:nth-child(1) .indicator-icon i { color: var(--icon-estimated-color); }
+.indicator-card:nth-child(2) .indicator-icon i { color: var(--icon-produced-color); }
+.indicator-card:nth-child(3),
+.indicator-card:nth-child(4) .indicator-icon i { color: var(--icon-approved-color); }
+.indicator-card:nth-child(5),
+.indicator-card:nth-child(6) .indicator-icon i { color: var(--icon-rejected-color); }
+
+.indicator-title {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.indicator-value {
+    font-size: 60px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    word-wrap: break-word;
+}
+
+.indicator-subtitle {
+    font-size: 12px;
+    color: var(--text-muted-color);
+}
+
+.indicator-value-split {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.value-box {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    min-width: 50px;
+    line-height: 1.2;
+}
+
+.value-box.units {
+    background-color: var(--card-item-bg-color);
+    border: 1px solid var(--divider-color);
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: 60px;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--divider-color);
+    margin: 30px 0;
+}
+
+.oee-section {
+    margin-bottom: 25px;
+}
+
+.oee-chart-container {
+    background-color: var(--card-item-bg-color);
+    border-radius: 7px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.oee-chart-container .chart-container {
+    height: 300px;
+    position: relative;
+}
+
+canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.refresh-button:active {
+    transform: scale(0.95);
+}
+.refresh-button.updating {
+    background-color: var(--primary-hover-color);
+}
+.refresh-button.updating i {
+    animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+.refresh-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Modal - Usado para o modal de detalhes de projeto em Tela 2 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s;
+}
+.modal.show {
+    display: flex;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.modal-content {
+    background-color: var(--card-item-bg-color);
+    width: 90%;
+    max-width: 900px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    animation: slideDown 0.3s ease-out;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--divider-color);
+    position: relative; /* Para posicionar o close-modal */
+}
+.modal-header h2 {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+.close-modal { /* Classe para o botão de fechar dentro do modal */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: var(--text-muted-color);
+    cursor: pointer;
+}
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* Kanban (Tela 2 ou parte da Tela 1) */
+.kanban-container {
+    padding: 30px;
+}
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}
+.kanban-column {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.kanban-column h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+.kanban-card {
+    background-color: #f0f8ff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Gráfico de Gantt Simplificado (Tela 2 ou parte da Tela 1) */
+.gantt-container {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: var(--card-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.gantt-container h2 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+#gantt-chart {
+  overflow-x: auto;
+}
+
+.bar-completed {
+  fill: #66bb6a !important;
+}
+
+.bar-in-progress {
+  fill: #ffb84d !important;
+}
+
+.bar-planned {
+  fill: #4dabf7 !important;
+}
+
+/* Modal de Relatório (ID específico: #reportModal) */
+#reportModal { /* Esta é a definição principal para o modal de relatório */
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--modal-overlay);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s;
+}
+
+#reportModal.show {
+    display: flex;
+}
+
+#reportModal .modal-content { /* Conteúdo específico para o modal de relatório */
+    background-color: var(--card-bg-color);
+    width: 90%;
+    max-width: 900px;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s ease-out;
+    height: 80vh; /* Mantido para ter um tamanho consistente */
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Para o close-modal */
+}
+
+#reportModal .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--divider-color);
+}
+
+#reportModal .modal-header h2 {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Garante que o botão de fechar esteja correto para o modal de relatório */
+#reportModal .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: var(--text-muted-color);
+    cursor: pointer;
+}
+
+#reportModal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#reportModal .report-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--card-item-bg-color);
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#reportModal .date-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+#reportModal .date-input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+#reportModal .date-input-group label {
+    font-size: 0.9em;
+    color: var(--text-muted-color);
+    margin-bottom: 5px;
+}
+
+#reportModal .date-input-group input[type="date"] {
+    padding: 8px;
+    border: 1px solid var(--divider-color);
+    border-radius: 4px;
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+#reportModal .report-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#reportModal .report-actions button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+#reportModal .report-actions button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+#reportModal .report-result {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid var(--divider-color);
+    border-radius: 6px;
+    background-color: var(--card-item-bg-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+/* Estilos para a barra de rolagem (WebKit/Chrome/Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Estilos para a barra de rolagem (Firefox) */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* Estilos básicos para o container de erro */
+#error-container {
+    display: none; /* Inicia oculto */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 6s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
