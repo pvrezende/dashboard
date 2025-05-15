@@ -1,206 +1,208 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Produção</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Produção</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
 </head>
 <body>
-    <nav class="screen-selector">
-        <button onclick="switchScreen('tela1')" class="active">📊 Tela 1 - Dashboard</button>
-        <button onclick="switchScreen('tela2')">📌 Tela 2 - Status do Projeto</button>
-        <button onclick="switchScreen('tela3')">📝 Tela 3 - Cadastro de Projetos</button>
-    </nav>
+  <nav class="screen-selector">
+    <button onclick="switchScreen('tela1')" class="active">📊 Tela 1 - Dashboard</button>
+    <button onclick="switchScreen('tela2')">📌 Tela 2 - Status do Projeto</button>
+    <button onclick="switchScreen('tela3')">📝 Tela 3 - Cadastro de Projetos</button>
+  </nav>
 
-    <div id="tela1" class="tela active">
-        <div class="dashboard">
-            <div class="header">
-                <h1>CONTROLE DE PRODUÇÃO</h1>
-                <div id="currentDateTime" class="current-date-time">--:--:--</div>
-                <div class="action-buttons-container">
-                    <button class="refresh-button"><i class="fas fa-sync-alt"></i> Atualizar</button>
-                    <div class="report-trigger">
-                        <button id="openReportPanel"><i class="fas fa-file-alt"></i> Relatório</button>
-                    </div>
-                </div>
-                <div id="dateFilterContainer">
-                    <div class="date-filter">
-                        <label for="datePicker">Selecionar Data:</label>
-                        <input type="date" id="datePicker" name="datePicker">
-                        <button id="applyDateFilter">Filtrar</button>
-                    </div>
-                </div>
-            </div>
+  <div id="tela1" class="tela active">
+    <div class="dashboard">
+      <div class="header">
+        <h1>CONTROLE DE PRODUÇÃO</h1>
+        <div id="currentDateTime" class="current-date-time">--:--:--</div>
+        <div class="action-buttons-container">
+          <button class="refresh-button"><i class="fas fa-sync-alt"></i> Atualizar</button>
+          <div class="report-trigger">
+            <button id="openReportPanel"><i class="fas fa-file-alt"></i> Relatório</button>
+          </div>
+        </div>
+        <div id="dateFilterContainer">
+          <div class="date-filter">
+            <label for="datePicker">Selecionar Data:</label>
+            <input type="date" id="datePicker" name="datePicker">
+            <button id="applyDateFilter">Filtrar</button>
+          </div>
+        </div>
+      </div>
 
-            <div class="indicators-grid">
-                <div class="indicator-card">
-                    <div class="indicator-value-split">
-                        <div class="value-box">-- cx</div>
-                        <div class="value-box units">--</div>
-                    </div>
-                    <div class="indicator-icon"><i class="fas fa-boxes"></i></div>
-                    <div class="indicator-title">Meta</div>
-                </div>
-
-                <div class="indicator-card">
-                    <div class="indicator-value-split">
-                        <div class="value-box">-- cx</div>
-                        <div class="value-box units">--</div>
-                    </div>
-                    <div class="indicator-icon"><i class="fas fa-tools"></i></div>
-                    <div class="indicator-title">Peças Produzidas</div>
-                </div>
-
-                <div class="indicator-card">
-                    <div class="indicator-value">--</div>
-                    <div class="indicator-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="indicator-title">Total Aprovados</div>
-                </div>
-
-                <div class="indicator-card">
-                    <div class="indicator-subtitle"></div>
-                    <div class="indicator-value">--%</div>
-                    <div class="indicator-icon"><i class="fas fa-percentage"></i></div>
-                    <div class="indicator-title">% Aprovados</div>
-                </div>
-
-                <div class="indicator-card">
-                    <div class="indicator-value">--</div>
-                    <div class="indicator-icon"><i class="fas fa-times-circle"></i></div>
-                    <div class="indicator-title">Total Reprovados</div>
-                </div>
-
-                <div class="indicator-card">
-                    <div class="indicator-subtitle"></div>
-                    <div class="indicator-value">--%</div>
-                    <div class="indicator-icon"><i class="fas fa-percentage"></i></div>
-                    <div class="indicator-title">% Reprovados</div>
-                </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="oee-section">
-                <div class="oee-chart-container">
-                    <div class="section-title">Acompanhamento de Produção Hora a Hora</div>
-                    <div class="chart-container">
-                        <canvas id="oeeChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="divider"></div>
+      <div class="indicators-grid">
+        <div class="indicator-card">
+          <div class="indicator-value-split">
+            <div class="value-box">-- cx</div>
+            <div class="value-box units">--</div>
+          </div>
+          <div class="indicator-icon"><i class="fas fa-boxes"></i></div>
+          <div class="indicator-title">Meta</div>
         </div>
 
-        <div id="reportModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Relatório de Produção</h2>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div class="report-filter">
-                        <div class="date-inputs">
-                            <div class="date-input-group">
-                                <label for="startDate">De:</label>
-                                <input type="date" id="startDate">
-                            </div>
-                            <div class="date-input-group">
-                                <label for="endDate">Até:</label>
-                                <input type="date" id="endDate">
-                            </div>
-                        </div>
-                        <div class="report-actions">
-                            <button id="generateReport"><i class="fas fa-search"></i> Gerar</button>
-                            <button id="downloadReport" class="download-btn"><i class="fas fa-download"></i> Baixar TXT</button>
-                        </div>
-                    </div>
-                    <div id="reportResult" class="report-result"></div>
-                </div>
-            </div>
+        <div class="indicator-card">
+          <div class="indicator-value-split">
+            <div class="value-box">-- cx</div>
+            <div class="value-box units">--</div>
+          </div>
+          <div class="indicator-icon"><i class="fas fa-tools"></i></div>
+          <div class="indicator-title">Peças Produzidas</div>
         </div>
+
+        <div class="indicator-card">
+          <div class="indicator-value">--</div>
+          <div class="indicator-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="indicator-title">Total Aprovados</div>
+        </div>
+
+        <div class="indicator-card">
+          <div class="indicator-subtitle"></div>
+          <div class="indicator-value">--%</div>
+          <div class="indicator-icon"><i class="fas fa-percentage"></i></div>
+          <div class="indicator-title">% Aprovados</div>
+        </div>
+
+        <div class="indicator-card">
+          <div class="indicator-value">--</div>
+          <div class="indicator-icon"><i class="fas fa-times-circle"></i></div>
+          <div class="indicator-title">Total Reprovados</div>
+        </div>
+
+        <div class="indicator-card">
+          <div class="indicator-subtitle"></div>
+          <div class="indicator-value">--%</div>
+          <div class="indicator-icon"><i class="fas fa-percentage"></i></div>
+          <div class="indicator-title">% Reprovados</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="oee-section">
+        <div class="oee-chart-container">
+          <div class="section-title">Acompanhamento de Produção Hora a Hora</div>
+          <div class="chart-container">
+            <canvas id="oeeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
     </div>
 
-    <div id="tela2" class="tela">
-        <link rel="stylesheet" href="tela2.css">
-        <div class="dashboard" id="projetosContainer">
-            <div class="header-row">
-                <div>Projeto</div>
-                <div>Progresso</div>
-                <div>Ações</div>
-            </div>
+    <div id="reportModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Relatório de Produção</h2>
+          <span class="close-modal">&times;</span>
         </div>
-
-        <div id="projectModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Líder do Projeto</h2>
-                <p id="project-leader"></p>
-                <h3>Equipe</h3>
-                <ul id="team-list"></ul>
+        <div class="modal-body">
+          <div class="report-filter">
+            <div class="date-inputs">
+              <div class="date-input-group">
+                <label for="startDate">De:</label>
+                <input type="date" id="startDate">
+              </div>
+              <div class="date-input-group">
+                <label for="endDate">Até:</label>
+                <input type="date" id="endDate">
+              </div>
             </div>
-        </div>
-
-        <div id="editModal" class="modal">
-            <div class="modal-content">
-                <span class="close" id="editClose">&times;</span>
-                <h2>Editar Projeto</h2>
-                <form id="editForm">
-                    <input type="hidden" id="editId">
-                    <label>Nome:</label>
-                    <input type="text" id="editNome" required>
-                    <label>Líder:</label>
-                    <input type="text" id="editLider" required>
-                    <label>Equipe (separado por vírgula):</label>
-                    <input type="text" id="editEquipe" required>
-                    <label>Etapa Atual (1 a 7):</label>
-                    <input type="number" id="editEtapa" min="1" max="7" required>
-                    <button type="submit">Salvar</button>
-                </form>
+            <div class="report-actions">
+              <button id="generateReport" class="action-btn">Gerar Relatório</button>
+              <button id="downloadReport" class="action-btn" disabled>Baixar Relatório</button>
             </div>
+          </div>
+          <div id="reportResult" class="report-result"></div>
         </div>
+      </div>
     </div>
+  </div>
 
-
-    <div id="tela3" class="tela">
-        <link rel="stylesheet" href="tela3.css">
-        <div class="form-container">
-            <h1>Cadastro de Projeto</h1>
-            <form id="cadastroProjetoForm">
-                <label>Nome do Projeto:</label>
-                <input type="text" name="nome" required>
-
-                <label>Líder do Projeto:</label>
-                <input type="text" name="lider" required>
-
-                <label>Equipe (separado por vírgula):</label>
-                <input type="text" name="equipe" required>
-
-                <label>Etapa Atual:</label>
-                <select name="etapa_atual" required>
-                    <option value="1">1 - Projeto</option>
-                    <option value="2">2 - Compras</option>
-                    <option value="3">3 - Usinagem</option>
-                    <option value="4">4 - Montagem</option>
-                    <option value="5">5 - Elétrica</option>
-                    <option value="6">6 - Testes</option>
-                    <option value="7">7 - Entrega</option>
-                </select>
-
-                <button type="submit">Salvar Projeto</button>
-            </form>
-            <p id="statusMsg"></p>
-        </div>
+  <div id="tela2" class="tela">
+  <link rel="stylesheet" href="tela2.css">
+  <div class="dashboard" id="projetosContainer">
+    <div class="header-row">
+      <div>Projeto</div>
+      <div>Progresso</div>
+      <div>Ações</div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-    <script src="tela2.js"></script>
-    <script src="tela3.js"></script>
+  <div id="projectModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Líder do Projeto</h2>
+      <p id="project-leader"></p>
+      <h3>Equipe</h3>
+      <ul id="team-list"></ul>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="editClose">&times;</span>
+      <h2>Editar Projeto</h2>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <label>Nome:</label>
+        <input type="text" id="editNome" required>
+        <label>Líder:</label>
+        <input type="text" id="editLider" required>
+        <label>Equipe (separado por vírgula):</label>
+        <input type="text" id="editEquipe" required>
+        <label>Etapa Atual (1 a 7):</label>
+        <input type="number" id="editEtapa" min="1" max="7" required>
+        <button type="submit">Salvar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+  <div id="tela3" class="tela">
+  <link rel="stylesheet" href="tela3.css">
+  <div class="form-container">
+    <h1>Cadastro de Projeto</h1>
+    <form id="cadastroProjetoForm">
+      <label>Nome do Projeto:</label>
+      <input type="text" name="nome" required>
+
+      <label>Líder do Projeto:</label>
+      <input type="text" name="lider" required>
+
+      <label>Equipe (separado por vírgula):</label>
+      <input type="text" name="equipe" required>
+
+      <label>Etapa Atual:</label>
+      <select name="etapa_atual" required>
+        <option value="1">1 - Projeto</option>
+        <option value="2">2 - Compras</option>
+        <option value="3">3 - Usinagem</option>
+        <option value="4">4 - Montagem</option>
+        <option value="5">5 - Elétrica</option>
+        <option value="6">6 - Testes</option>
+        <option value="7">7 - Entrega</option>
+      </select>
+
+      <button type="submit">Salvar Projeto</button>
+    </form>
+    <p id="statusMsg"></p>
+  </div>
+</div>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script src="tela2.js"></script>
+  <script src="tela3.js"></script>
 
 </body>
 </html>
